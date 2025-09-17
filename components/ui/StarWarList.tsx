@@ -32,26 +32,26 @@ const StarWarList = ({
   const animationRef = useRef<number | undefined>(undefined);
 
   const createParticle = (app: PIXI.Application): Particle => {
-    // Створюємо різні типи частинок
+    // create different types of particles
     const particleTypes = [
-      { size: 1, color: 0xffffff, alpha: 0.8 }, // Маленькі білі зірки
-      { size: 2, color: 0xffd700, alpha: 0.9 }, // Золоті зірки
-      { size: 1.5, color: 0x87ceeb, alpha: 0.7 }, // Блакитні зірки
-      { size: 0.8, color: 0xffa500, alpha: 0.6 }, // Помаранчеві зірки
-      { size: 3, color: 0xffffff, alpha: 1.0 }, // Великі білі зірки
-      { size: 1.2, color: 0xdda0dd, alpha: 0.8 }, // Фіолетові зірки
+      { size: 1, color: 0xffffff, alpha: 0.8 }, // small white stars
+      { size: 2, color: 0xffd700, alpha: 0.9 }, // golden stars
+      { size: 1.5, color: 0x87ceeb, alpha: 0.7 }, // blue stars
+      { size: 0.8, color: 0xffa500, alpha: 0.6 }, // orange stars
+      { size: 3, color: 0xffffff, alpha: 1.0 }, // big white stars
+      { size: 1.2, color: 0xdda0dd, alpha: 0.8 }, // purple stars
     ];
 
     const type =
       particleTypes[Math.floor(Math.random() * particleTypes.length)];
 
-    // Створюємо графіку для частинки
+    // create graphics for particle
     const graphics = new PIXI.Graphics();
     graphics.beginFill(type.color, type.alpha);
     graphics.drawCircle(0, 0, type.size);
     graphics.endFill();
 
-    // Додаємо ефект мерехтіння для великих зірок
+    // add twinkling effect for big stars
     if (type.size > 2) {
       graphics.beginFill(type.color, 0.3);
       graphics.drawCircle(0, 0, type.size * 2);
@@ -61,14 +61,14 @@ const StarWarList = ({
     const texture = app.renderer.generateTexture(graphics);
     const sprite = new PIXI.Sprite(texture);
 
-    // Випадкова позиція
+    // random position
     sprite.x = Math.random() * app.screen.width;
     sprite.y = Math.random() * app.screen.height;
 
-    // Центруємо anchor
+    // center anchor
     sprite.anchor.set(0.5);
 
-    // Додаємо blur ефект для деяких частинок
+    // add blur effect for some particles
     if (Math.random() > 0.7) {
       sprite.filters = [new BlurFilter(0.5)];
     }
@@ -88,11 +88,11 @@ const StarWarList = ({
 
   const animateParticles = (app: PIXI.Application) => {
     particlesRef.current.forEach((particle) => {
-      // Рух з прискоренням
+      // movement with acceleration
       particle.vx += (Math.random() - 0.5) * particle.acceleration;
       particle.vy += (Math.random() - 0.5) * particle.acceleration;
 
-      // Обмежуємо максимальну швидкість
+      // limit maximum speed
       const maxSpeed = particle.baseSpeed * 2;
       const speed = Math.sqrt(
         particle.vx * particle.vx + particle.vy * particle.vy
@@ -102,16 +102,16 @@ const StarWarList = ({
         particle.vy = (particle.vy / speed) * maxSpeed;
       }
 
-      // Оновлюємо позицію
+      // update position
       particle.sprite.x += particle.vx;
       particle.sprite.y += particle.vy;
 
-      // Ефект мерехтіння
+      // twinkling effect
       particle.twinklePhase += particle.twinkleSpeed;
       const twinkle = Math.sin(particle.twinklePhase) * 0.3 + 0.7;
       particle.sprite.alpha = twinkle;
 
-      // Легке обертання для великих зірок
+      // light rotation for big stars
       if (particle.size > 2) {
         particle.sprite.rotation += 0.01;
       }
@@ -130,21 +130,21 @@ const StarWarList = ({
     if (!mountRef.current || isLoading || appRef.current) return;
 
     const initPixi = async () => {
-      // Ініціалізуємо PIXI додаток
+      // initialize PIXI application
       const app = new PIXI.Application();
 
       await app.init({
         width: window.innerWidth,
         height: window.innerHeight,
-        backgroundColor: 0x000011, // Темно-синій космічний фон
+        backgroundColor: 0x000011, // dark blue cosmic background
         resolution: window.devicePixelRatio || 1,
         antialias: true,
-        resizeTo: window, // Автоматично підлаштовується під розмір вікна
+        resizeTo: window, // automatically adjust to window size
       });
 
       appRef.current = app;
 
-      // Налаштовуємо canvas на весь екран
+      // configure canvas to cover the entire screen
       app.canvas.style.position = "fixed";
       app.canvas.style.top = "0";
       app.canvas.style.left = "0";
@@ -154,11 +154,11 @@ const StarWarList = ({
 
       mountRef.current?.appendChild(app.canvas);
 
-      // Створюємо контейнер для частинок
+      // create container for particles
       const particlesContainer = new PIXI.Container();
       app.stage.addChild(particlesContainer);
 
-      // Створюємо багато частинок
+      // create many particles
       const particleCount = 200;
       for (let i = 0; i < particleCount; i++) {
         const particle = createParticle(app);
@@ -166,20 +166,20 @@ const StarWarList = ({
         particlesRef.current.push(particle);
       }
 
-      // Запускаємо анімацію
+      // start animation
       animateParticles(app);
 
-      // Обробка зміни розміру вікна
+      // handle window size change
       const handleResize = () => {
         app.renderer.resize(window.innerWidth, window.innerHeight);
-        // Оновлюємо стилі canvas при зміні розміру
+        // update canvas styles when size changes
         app.canvas.style.width = "100vw";
         app.canvas.style.height = "100vh";
       };
 
       window.addEventListener("resize", handleResize);
 
-      // Cleanup функція
+      // cleanup function
       return () => {
         window.removeEventListener("resize", handleResize);
         if (animationRef.current) {
@@ -193,7 +193,7 @@ const StarWarList = ({
       };
     };
 
-    // Викликаємо асинхронну функцію та зберігаємо cleanup
+    // call asynchronous function and save cleanup
     let cleanup: (() => void) | undefined;
     initPixi().then((cleanupFn) => {
       cleanup = cleanupFn;
@@ -206,7 +206,7 @@ const StarWarList = ({
 
   return (
     <div className="relative w-full min-h-screen">
-      {/* PIXI Canvas фон - на весь екран */}
+      {/* PIXI Canvas background - cover the entire screen */}
       <div
         ref={mountRef}
         className="fixed inset-0 z-0 w-full h-full"
@@ -220,7 +220,7 @@ const StarWarList = ({
         }}
       />
 
-      {/* Контент поверх фону */}
+      {/* Content on top of background */}
       <div className="relative z-10 w-full mx-auto p-8 md:p-16 lg:p-24 xl:p-32 min-h-screen">
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20">
           {movies.map((movie) => (
