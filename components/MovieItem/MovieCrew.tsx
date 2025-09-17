@@ -57,8 +57,8 @@ const MovieCrew = ({ id }: { id: string }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-        <span className="w-1 h-8 bg-blue-500 mr-3 rounded-full"></span>
+      <h2 className="text-2xl font-bold text-white mb-6 flex items-center bg-gray-300/10 overflow-hidden rounded-lg py-2 pl-4 border-l-5 border-blue-400">
+        {/* <span className="w-1 h-8 bg-blue-500 py-4 mr-3 rounded-full "></span> */}
         Crew
       </h2>
 
@@ -68,7 +68,7 @@ const MovieCrew = ({ id }: { id: string }) => {
 
           return (
             <div key={department} className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-200 border-l-2 border-blue-400 pl-3">
+              <h3 className="text-lg font-semibold text-gray-200 border-l-2 border-blue-400 pl-3 bg-gray-300/10 py-2 overflow-hidden rounded-lg">
                 {department}
               </h3>
 

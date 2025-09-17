@@ -66,8 +66,8 @@ const MovieCasts = ({ id }: { id: string }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-        <span className="w-1 h-8 bg-red-500 mr-3 rounded-full"></span>
+      <h2 className="text-2xl font-bold text-white mb-6 flex items-center bg-gray-300/10 overflow-hidden rounded-lg py-2 pl-4 border-l-5 border-red-400">
+        {/* <span className="w-1 h-8 bg-red-500 mr-3 rounded-full"></span> */}
         Cast
       </h2>
 
