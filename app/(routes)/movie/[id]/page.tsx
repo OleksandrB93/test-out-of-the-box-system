@@ -1,9 +1,11 @@
 "use client";
 
 import { useGetItem } from "@/hooks/use-get-item";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
+
 import { useGetVideo } from "@/hooks/use-get-video";
+import MovieItem from "@/components/MovieItem";
 
 const MoviePage = () => {
   const { id } = useParams();
@@ -16,6 +18,10 @@ const MoviePage = () => {
     trailer,
   } = useGetVideo();
 
+  const [isMuted, setIsMuted] = useState(true);
+  const [canAutoplay, setCanAutoplay] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   useEffect(() => {
     if (id) {
       getItem(id as string);
@@ -23,43 +29,76 @@ const MoviePage = () => {
     }
   }, [id]);
 
-  const unmuteIframe = () => {
-    const iframe = document.getElementById("yt-bg") as HTMLIFrameElement;
+  const sendYouTubeCommand = (command: string) => {
+    const iframe = iframeRef.current;
     if (iframe && iframe.contentWindow) {
       iframe.contentWindow.postMessage(
-        '{"event":"command","func":"unMute","args":""}',
+        `{"event":"command","func":"${command}","args":""}`,
         "*"
       );
     }
   };
 
+  const toggleSound = () => {
+    if (isMuted) {
+      sendYouTubeCommand("unMute");
+      setIsMuted(false);
+    } else {
+      sendYouTubeCommand("mute");
+      setIsMuted(true);
+    }
+  };
+
+  // Check if autoplay with sound is possible
   useEffect(() => {
-    if (item && video && trailer) {
+    const checkAutoplayCapability = async () => {
+      try {
+        // Create a test audio element to check autoplay policy
+        const audio = new Audio();
+        audio.muted = false;
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+          await playPromise;
+          setCanAutoplay(true);
+          audio.pause();
+        }
+      } catch (error) {
+        // Autoplay with sound is blocked
+        setCanAutoplay(false);
+      }
+    };
+
+    checkAutoplayCapability();
+  }, []);
+
+  useEffect(() => {
+    if (trailer) {
       // Delay to ensure iframe is fully loaded
       const timer = setTimeout(() => {
-        unmuteIframe();
-      }, 1000);
+        if (canAutoplay) {
+          // Try to unmute automatically if autoplay is allowed
+          sendYouTubeCommand("unMute");
+          setIsMuted(false);
+        }
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
-  }, [item, video, trailer]);
+  }, [trailer, canAutoplay]);
 
   if (loading || videoLoading) return <div>Loading...</div>;
   if (error || videoError) return <div>Error: {error.message}</div>;
   if (!item || !video) return <div>Movie not found</div>;
 
   return (
-    <div>
-      <div className="fixed scale-[1.35] top-0 left-0 w-screen h-screen overflow-hidden -z-10">
-        <iframe
-          className="absolute top-1/2 left-1/2 w-[177.77vh] h-[100vh] -translate-x-1/2 -translate-y-1/2"
-          src={`https://www.youtube-nocookie.com/embed/${trailer?.key}?autoplay=1&mute=1&loop=1&playlist=${trailer?.key}&enablejsapi=1&controls=0&rel=0&modestbranding=1&disablekb=1`}
-          allow="autoplay; fullscreen"
-          title="Trailer Background"
-          id="yt-bg"
-        />
-      </div>
-    </div>
+    <MovieItem
+      item={item}
+      trailer={trailer}
+      isMuted={isMuted}
+      toggleSound={toggleSound}
+      iframeRef={iframeRef}
+    />
   );
 };
 
