@@ -1,8 +1,5 @@
 "use client";
 
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { VolumeX, Volume2, ArrowLeft } from "lucide-react";
@@ -11,8 +8,10 @@ import { Button } from "../ui/button";
 import MoviePoster from "./MoviePoster";
 import MovieDetails from "./MovieDetails";
 import MovieTrailer from "./MovieTrailer";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import MovieReviews from "./MovieReviews";
+import MovieCasts from "./MovieCasts";
+import MovieCrew from "./MovieCrew";
+import { useMovieAnimations } from "../../hooks/use-movie-animations";
 
 const MovieItem = ({
   item,
@@ -30,95 +29,7 @@ const MovieItem = ({
   const router = useRouter();
   const container = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    const ctx = gsap.context(() => {
-      // Check if mobile
-      const isMobile = window.innerWidth < 1024;
-
-      // Set init state
-      gsap.set(".gradient-overlay", { opacity: 0 });
-
-      if (isMobile) {
-        // Mobile: vertical animations
-        gsap.set(".poster", { y: 50, opacity: 0 });
-        gsap.set(".details", { y: 50, opacity: 0 });
-      } else {
-        // Desktop: horizontal animations
-        gsap.set(".poster", { x: -100, opacity: 0 });
-        gsap.set(".details", { x: 100, opacity: 0 });
-      }
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-          pin: false,
-        },
-      });
-
-      // gradient
-      tl.to(
-        ".gradient-overlay",
-        {
-          opacity: 1,
-          duration: 0.3,
-        },
-        0.2
-      );
-
-      if (isMobile) {
-        // Mobile: sequential vertical animations
-        tl.to(
-          ".poster",
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0.3
-        );
-
-        tl.to(
-          ".details",
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0.5
-        );
-      } else {
-        // Desktop: horizontal animations
-        tl.to(
-          ".poster",
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0.3
-        );
-
-        tl.to(
-          ".details",
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0.3
-        );
-      }
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
+  useMovieAnimations(container);
 
   return (
     <div ref={container} className="relative" style={{ height: "200vh" }}>
@@ -149,8 +60,9 @@ const MovieItem = ({
 
       <div className="backdrop-blur-sm gradient-overlay fixed inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
 
-      <div className="fixed inset-0 z-20 flex items-center justify-center overflow-hidden">
-        <div className="container mx-auto px-4 lg:px-8 max-h-screen overflow-x-hidden">
+      {/* Main content - poster and details */}
+      <div className="fixed inset-0 z-20 flex items-center justify-center">
+        <div className="main-content container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center lg:items-center">
             <div className="poster flex justify-center lg:justify-start">
               <div className="w-full max-w-sm lg:max-w-none">
@@ -159,6 +71,23 @@ const MovieItem = ({
             </div>
             <div className="details">
               <MovieDetails item={item} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scrollable additional content */}
+      <div className="relative z-20 pt-[250vh]">
+        <div className="bg-black/95 backdrop-blur-sm">
+          <div className="container mx-auto px-4 space-y-16 py-16">
+            <div className="casts">
+              <MovieCasts id={item.id} />
+            </div>
+            <div className="crew">
+              <MovieCrew id={item.id} />
+            </div>
+            <div className="reviews">
+              <MovieReviews id={item.id} />
             </div>
           </div>
         </div>
