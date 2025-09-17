@@ -13,8 +13,8 @@ export default function Home() {
   }, [searchMovies]);
 
   return (
-    <div className="">
-      <StarWarList movies={movies} />
+    <div className="w-full">
+      <StarWarList movies={movies} isLoading={loading} />
     </div>
   );
 }
