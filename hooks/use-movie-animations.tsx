@@ -46,7 +46,7 @@ export const useMovieAnimations = (
           opacity: 1,
           duration: 0.3,
         },
-        0.2
+        0.1
       );
 
       if (isMobile) {
@@ -82,7 +82,7 @@ export const useMovieAnimations = (
             duration: 0.4,
             ease: "power2.out",
           },
-          0.3
+          0.1
         );
 
         tl.to(
@@ -93,7 +93,7 @@ export const useMovieAnimations = (
             duration: 0.4,
             ease: "power2.out",
           },
-          0.3
+          0.1
         );
       }
 
