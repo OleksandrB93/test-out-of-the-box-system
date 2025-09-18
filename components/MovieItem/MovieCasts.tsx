@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useGetCast } from "@/hooks/use-get-cast";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,7 +44,7 @@ const MovieCasts = ({ id }: { id: string }) => {
 
   useEffect(() => {
     getCast(id);
-  }, [id]);
+  }, [id, getCast]);
 
   // Sync ref with state
   useEffect(() => {
@@ -83,7 +84,7 @@ const MovieCasts = ({ id }: { id: string }) => {
       // Create ScrollTrigger for animation of actors
       const ctx = gsap.context(() => {
         // Set initial state for all actors (show back side with name)
-        actorsRefs.current.forEach((ref, index) => {
+        actorsRefs.current.forEach((ref) => {
           if (ref) {
             gsap.set(ref, {
               opacity: 1,
@@ -135,7 +136,7 @@ const MovieCasts = ({ id }: { id: string }) => {
 
       return () => ctx.revert();
     }
-  }, [cast, loading]);
+  }, [cast, loading, updateVisibleActor]);
 
   if (loading) {
     return (
@@ -192,9 +193,11 @@ const MovieCasts = ({ id }: { id: string }) => {
                 style={{ backfaceVisibility: "hidden" }}
               >
                 {castMember.profile_path ? (
-                  <img
+                  <Image
                     src={`https://image.tmdb.org/t/p/w300${castMember.profile_path}`}
                     alt={castMember.name}
+                    width={300}
+                    height={450}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                   />

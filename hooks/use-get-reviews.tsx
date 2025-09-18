@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export const useGetReviews = () => {
   const [reviews, setReviews] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const getReviews = async (id: string) => {
+  const getReviews = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
 
@@ -27,7 +27,7 @@ export const useGetReviews = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return {
     reviews,

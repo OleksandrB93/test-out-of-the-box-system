@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export const useGetCast = () => {
   const [cast, setCast] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const getCast = async (id: string) => {
+  const getCast = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -20,13 +20,12 @@ export const useGetCast = () => {
       const response = await fetch(url, options);
       const data = await response.json();
       setCast(data);
-      console.log(data);
     } catch (err) {
       setError(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return {
     cast,

@@ -1,10 +1,16 @@
-const MovieTrailer = ({
-  trailer,
-  iframeRef,
-}: {
-  trailer: any;
-  iframeRef: any;
-}) => {
+interface MovieTrailerProps {
+  trailer: {
+    key: string;
+    id?: number;
+    name?: string;
+    site?: string;
+    type?: string;
+    official?: boolean;
+  } | null;
+  iframeRef: React.RefObject<HTMLIFrameElement | null>;
+}
+
+const MovieTrailer = ({ trailer, iframeRef }: MovieTrailerProps) => {
   return (
     <div className="fixed scale-[1.35] top-0 left-0 w-screen h-screen overflow-hidden -z-10">
       <iframe

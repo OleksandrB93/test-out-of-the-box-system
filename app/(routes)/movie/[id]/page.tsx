@@ -27,7 +27,7 @@ const MoviePage = () => {
       getItem(id as string);
       getVideo(id as string);
     }
-  }, [id]);
+  }, [id, getItem, getVideo]);
 
   const sendYouTubeCommand = (command: string) => {
     const iframe = iframeRef.current;
@@ -63,7 +63,7 @@ const MoviePage = () => {
           setCanAutoplay(true);
           audio.pause();
         }
-      } catch (error) {
+      } catch {
         // Autoplay with sound is blocked
         setCanAutoplay(false);
       }

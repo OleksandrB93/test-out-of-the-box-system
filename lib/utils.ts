@@ -30,13 +30,16 @@ export const keyDepartments = [
 ];
 
 export const groupCrewByDepartment = (crew: CrewMemberProps[]) => {
-  return crew.reduce((acc: any, member: CrewMemberProps) => {
-    if (!acc[member.department]) {
-      acc[member.department] = [];
-    }
-    acc[member.department].push(member);
-    return acc;
-  }, {});
+  return crew.reduce(
+    (acc: Record<string, CrewMemberProps[]>, member: CrewMemberProps) => {
+      if (!acc[member.department]) {
+        acc[member.department] = [];
+      }
+      acc[member.department].push(member);
+      return acc;
+    },
+    {}
+  );
 };
 
 export const sortDepartmentsByImportance = (departments: string[]) => {

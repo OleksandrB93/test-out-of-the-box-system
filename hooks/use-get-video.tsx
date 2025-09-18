@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 interface Video {
   id: number;
@@ -15,7 +15,7 @@ export const useGetVideo = () => {
   const [error, setError] = useState<string | null>(null);
   const [trailer, setTrailer] = useState<Video | null>(null);
 
-  const getVideo = async (id: string) => {
+  const getVideo = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -41,7 +41,7 @@ export const useGetVideo = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return {
     video,

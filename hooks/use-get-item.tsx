@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export const useGetItem = () => {
   const [item, setItem] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const getItem = async (id: string) => {
+  const getItem = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -26,7 +26,7 @@ export const useGetItem = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return {
     item,

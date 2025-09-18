@@ -1,8 +1,9 @@
 import { useGetReviews } from "@/hooks/use-get-reviews";
 import { useEffect } from "react";
-import { Star, User, Calendar, MessageSquare } from "lucide-react";
+import { User, Calendar, MessageSquare } from "lucide-react";
 import { formatDate, truncateContent } from "@/lib/utils";
 import RenderStars from "../ui/RenderStars";
+import Image from "next/image";
 
 interface Review {
   id: string;
@@ -21,7 +22,7 @@ const MovieReviews = ({ id }: { id: string }) => {
 
   useEffect(() => {
     getReviews(id);
-  }, [id]);
+  }, [id, getReviews]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -58,12 +59,14 @@ const MovieReviews = ({ id }: { id: string }) => {
               <div className="flex items-start gap-4 mb-4">
                 <div className="relative">
                   {review.author_details.avatar_path ? (
-                    <img
+                    <Image
                       src={`https://image.tmdb.org/t/p/w64${review.author_details.avatar_path}`}
                       alt={
                         review.author_details.name ||
                         review.author_details.username
                       }
+                      width={64}
+                      height={64}
                       className="h-12 w-12 rounded-full object-cover border-2 border-white/20"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;

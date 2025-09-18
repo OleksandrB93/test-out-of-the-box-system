@@ -6,6 +6,7 @@ import {
 } from "@/lib/utils";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,7 +33,7 @@ const MovieCrew = ({ id }: { id: string }) => {
 
   useEffect(() => {
     getCast(id);
-  }, [id]);
+  }, [id, getCast]);
 
   // Sync ref with state
   useEffect(() => {
@@ -210,9 +211,11 @@ const MovieCrew = ({ id }: { id: string }) => {
                         >
                           <div className="relative overflow-hidden rounded-full w-12 h-12 bg-gray-700 flex-shrink-0">
                             {crewMember.profile_path ? (
-                              <img
+                              <Image
                                 src={`https://image.tmdb.org/t/p/w185${crewMember.profile_path}`}
                                 alt={crewMember.name}
+                                width={185}
+                                height={278}
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                                 loading="lazy"
                               />
@@ -257,17 +260,6 @@ const MovieCrew = ({ id }: { id: string }) => {
                             </p>
                           </div>
                         </div>
-                      </div>
-
-                      {/* Information under the card (shown only after flip) */}
-                      <div
-                        className={`text-center mt-2 transition-opacity duration-300 ${
-                          visibleCrewMembers.includes(memberId)
-                            ? "opacity-100"
-                            : "opacity-0"
-                        }`}
-                      >
-                        <p className="text-xs text-gray-400">{department}</p>
                       </div>
                     </div>
                   );

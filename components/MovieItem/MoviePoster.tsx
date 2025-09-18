@@ -12,7 +12,10 @@ export interface ItemProps {
     vote_count?: number;
     release_date?: string;
     runtime?: number;
-    genres?: any[];
+    genres?: Array<{
+      id: number;
+      name: string;
+    }>;
     budget?: number;
     overview?: string;
   };

@@ -12,7 +12,7 @@ const MovieDetails = ({ item }: ItemProps) => {
         </h1>
         {item.tagline && (
           <p className="text-lg md:text-xl text-gray-300 font-light italic">
-            "{item.tagline}"
+            &ldquo;{item.tagline}&rdquo;
           </p>
         )}
       </div>
@@ -49,7 +49,7 @@ const MovieDetails = ({ item }: ItemProps) => {
       {/* Genres */}
       {item.genres && item.genres.length > 0 && (
         <div className="flex flex-wrap justify-center lg:justify-start gap-2">
-          {item.genres.map((genre: any) => (
+          {item.genres.map((genre) => (
             <span
               key={genre.id}
               className="backdrop-blur-md bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white px-3 py-1 rounded-full text-sm border border-white/20 hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-200"

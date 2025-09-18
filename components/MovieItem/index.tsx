@@ -12,6 +12,22 @@ import MovieReviews from "./MovieReviews";
 import MovieCasts from "./MovieCasts";
 import MovieCrew from "./MovieCrew";
 import { useMovieAnimations } from "../../hooks/use-movie-animations";
+import { ItemProps } from "./MoviePoster";
+
+interface MovieItemProps {
+  item: ItemProps["item"];
+  trailer: {
+    key: string;
+    id?: number;
+    name?: string;
+    site?: string;
+    type?: string;
+    official?: boolean;
+  } | null;
+  iframeRef: React.RefObject<HTMLIFrameElement | null>;
+  toggleSound: () => void;
+  isMuted: boolean;
+}
 
 const MovieItem = ({
   item,
@@ -19,20 +35,14 @@ const MovieItem = ({
   toggleSound,
   isMuted,
   iframeRef,
-}: {
-  item: any;
-  trailer: any;
-  iframeRef: any;
-  toggleSound: any;
-  isMuted: any;
-}) => {
+}: MovieItemProps) => {
   const router = useRouter();
   const container = useRef<HTMLDivElement>(null);
 
   useMovieAnimations(container);
 
   return (
-    <div ref={container} className="relative" style={{ height: "200vh" }}>
+    <div  ref={container} className="relative custom-mouse-cursor" style={{ height: "200vh" }}>
       <Button
         onClick={() => router.back()}
         className="fixed top-4 left-4 z-50 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 backdrop-blur-sm transition-all duration-200"
@@ -81,13 +91,13 @@ const MovieItem = ({
         <div className="bg-black/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 space-y-16 py-16">
             <div className="casts">
-              <MovieCasts id={item.id} />
+              <MovieCasts id={item.id?.toString() || ""} />
             </div>
             <div className="crew">
-              <MovieCrew id={item.id} />
+              <MovieCrew id={item.id?.toString() || ""} />
             </div>
             <div className="reviews">
-              <MovieReviews id={item.id} />
+              <MovieReviews id={item.id?.toString() || ""} />
             </div>
           </div>
         </div>
