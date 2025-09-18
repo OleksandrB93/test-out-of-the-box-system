@@ -12,9 +12,15 @@ export default function Home() {
     searchMovies("star wars");
   }, [searchMovies]);
 
+  // Replace the third card (index 5) with the eighth card (index 7)
+  const displayMovies =
+    movies.length >= 8
+      ? [movies[3], movies[4], movies[8], movies[6], movies[7]].filter(Boolean)
+      : movies.slice(3, 8);
+
   return (
     <div className="w-full">
-      <StarWarList movies={movies} isLoading={loading} />
+      <StarWarList movies={displayMovies} isLoading={loading} />
     </div>
   );
 }
