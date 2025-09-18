@@ -18,7 +18,7 @@ const StarWarList = ({
   const [use3D, setUse3D] = useState(true); // Toggle between 2D and 3D views
 
   const { mountRef: starFieldRef } = useStarFieldAnimation({
-    isLoading: false, // Завжди показуємо зірки
+    isLoading: false, // Always show stars
     particleCount: 200,
     backgroundColor: 0x000000,
   });
@@ -115,8 +115,8 @@ const StarWarList = ({
 
       {/* 2D Content - only visible when 3D is disabled */}
       {!use3D && (
-        <div className="relative z-10 w-full mx-auto p-8 md:p-16 lg:p-24 xl:p-32 min-h-screen">
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20">
+        <div className="relative z-10 w-full flex justify-center items-center p-8 md:p-16 lg:p-24 xl:p-32 min-h-screen">
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-20">
             {movies.map((movie) => (
               <StarWarItem key={movie.id} movie={movie} />
             ))}

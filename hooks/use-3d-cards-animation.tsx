@@ -175,7 +175,7 @@ export const use3DCardsAnimation = ({
           titleGradient.addColorStop(1, "#ff00ff");
 
           ctx.fillStyle = titleGradient;
-          ctx.font = "bold 22px Arial";
+          ctx.font = "bold 28px Arial";
           ctx.textAlign = "center";
           ctx.shadowColor = "rgba(0,0,0,0.8)";
           ctx.shadowBlur = 6;
@@ -200,7 +200,7 @@ export const use3DCardsAnimation = ({
 
             ctx.fillText(line1, canvas.width / 2, canvas.height - 50);
             if (line2) {
-              ctx.font = "bold 18px Arial";
+              ctx.font = "bold 22px Arial";
               ctx.fillText(
                 line2.substring(0, 25) + (line2.length > 25 ? "..." : ""),
                 canvas.width / 2,
@@ -250,7 +250,7 @@ export const use3DCardsAnimation = ({
 
         // Movie title
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px Arial";
+        ctx.font = "bold 30px Arial";
         ctx.textAlign = "center";
 
         const title = movie.title || "Unknown Movie";

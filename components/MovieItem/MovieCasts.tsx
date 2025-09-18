@@ -1,142 +1,23 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { useGetCast } from "@/hooks/use-get-cast";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useCastAnimation, CastMemberProps } from "@/hooks/use-cast-animation";
 import Image from "next/image";
-
-gsap.registerPlugin(ScrollTrigger);
-
-export interface CastMemberProps {
-  adult: boolean;
-  cast_id: number;
-  character: string;
-  credit_id: string;
-  gender: number | null;
-  id: number;
-  known_for_department: string;
-  name: string;
-  order: number;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-}
-
-export interface CrewMemberProps {
-  adult: boolean;
-  credit_id: string;
-  department: string;
-  gender: number | null;
-  id: number;
-  job: string;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-}
 
 const MovieCasts = ({ id }: { id: string }) => {
   const { cast, loading, error, getCast } = useGetCast();
-  const [visibleActors, setVisibleActors] = useState<number[]>([]);
-  const castContainerRef = useRef<HTMLDivElement>(null);
+  const castContainerRef = useRef<HTMLDivElement | null>(null);
   const actorsRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const visibleActorsRef = useRef<number[]>([]);
+
+  const { visibleActors } = useCastAnimation({
+    cast: cast?.cast,
+    loading,
+    castContainerRef,
+    actorsRefs,
+  });
 
   useEffect(() => {
     getCast(id);
   }, [id, getCast]);
-
-  // Sync ref with state
-  useEffect(() => {
-    visibleActorsRef.current = visibleActors;
-  }, [visibleActors]);
-
-  // Function to update visible actors
-  const updateVisibleActor = useCallback(
-    (index: number, isVisible: boolean) => {
-      setVisibleActors((prev) => {
-        const current = [...prev];
-        const exists = current.includes(index);
-
-        if (isVisible && !exists) {
-          return [...current, index];
-        } else if (!isVisible && exists) {
-          return current.filter((i) => i !== index);
-        }
-        return current;
-      });
-    },
-    []
-  );
-
-  // Animation of actors after loading data
-  useEffect(() => {
-    if (cast?.cast && cast.cast.length > 0 && !loading) {
-      // Clear previous state
-      setVisibleActors([]);
-
-      // Initialize array of refs
-      actorsRefs.current = actorsRefs.current.slice(
-        0,
-        Math.min(cast.cast.length, 12)
-      );
-
-      // Create ScrollTrigger for animation of actors
-      const ctx = gsap.context(() => {
-        // Set initial state for all actors (show back side with name)
-        actorsRefs.current.forEach((ref) => {
-          if (ref) {
-            gsap.set(ref, {
-              opacity: 1,
-              scale: 1,
-              rotationY: 180,
-              transformOrigin: "center center",
-            });
-          }
-        });
-
-        // Create ScrollTrigger for each actor separately with scrub animation
-        const topCast = cast?.cast?.slice(0, 12) || [];
-
-        topCast.forEach((_: CastMemberProps, index: number) => {
-          const actorRef = actorsRefs.current[index];
-          if (actorRef) {
-            // Each actor has its own ScrollTrigger with cascading start points
-            const totalActors = topCast.length;
-            const progressStep = 40 / totalActors; // Distribute 40% of viewport height between actors
-            const actorStart = 80 - index * progressStep; // Start from 80% and go down
-            const actorEnd = actorStart - progressStep; // End of animation for this actor
-
-            ScrollTrigger.create({
-              trigger: castContainerRef.current,
-              start: `top ${actorStart}%`,
-              end: `top ${actorEnd}%`,
-              scrub: 2, // More smooth animation
-              animation: gsap.to(actorRef, {
-                rotationY: 0,
-                duration: 1,
-                ease: "power2.out",
-                paused: true,
-                onUpdate: function () {
-                  // Update visibility state based on animation progress
-                  const progress = this.progress();
-                  const isVisible = progress > 0.3; // Show information slightly earlier
-                  const currentlyVisible =
-                    visibleActorsRef.current.includes(index);
-
-                  if (isVisible !== currentlyVisible) {
-                    updateVisibleActor(index, isVisible);
-                  }
-                },
-              }),
-            });
-          }
-        });
-      }, castContainerRef);
-
-      return () => ctx.revert();
-    }
-  }, [cast, loading, updateVisibleActor]);
 
   if (loading) {
     return (
