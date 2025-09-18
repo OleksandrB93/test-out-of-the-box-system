@@ -62,32 +62,54 @@ const StarWarList = ({
         />
       )}
 
-      {/* Modern Toggle Button */}
+      {/* Star Wars Toggle Button */}
       <div className="fixed top-4 right-4 z-20">
         <button
           onClick={() => setUse3D(!use3D)}
-          className="group relative bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-500 text-white px-6 py-3 rounded-xl shadow-xl hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 font-semibold backdrop-blur-sm border border-white/20 transform hover:scale-105 hover:-translate-y-1"
+          className="group relative bg-black hover:bg-gray-900 text-yellow-400 px-8 py-4 rounded-sm shadow-2xl hover:shadow-yellow-500/30 transition-all duration-500 font-bold tracking-wider uppercase border-2 border-yellow-400 hover:border-yellow-300 transform hover:scale-110"
+          style={{
+            fontFamily: "monospace",
+            textShadow: "0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24",
+            boxShadow:
+              "0 0 20px rgba(251, 191, 36, 0.3), inset 0 0 20px rgba(251, 191, 36, 0.1)",
+          }}
         >
-          {/* Animated background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-sm" />
+          {/* Lightsaber glow effect */}
+          <div
+            className="absolute inset-0 border-2 border-yellow-400 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"
+            style={{
+              boxShadow:
+                "0 0 30px #fbbf24, inset 0 0 30px rgba(251, 191, 36, 0.2)",
+            }}
+          />
 
-          {/* Button text with icons */}
-          <span className="relative flex items-center gap-2">
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-yellow-400 rounded-tl-sm" />
+          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-yellow-400 rounded-tr-sm" />
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-yellow-400 rounded-bl-sm" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-yellow-400 rounded-br-sm" />
+
+          {/* Button text with Star Wars icons */}
+          <span className="relative flex items-center gap-3 z-10">
             {use3D ? (
               <>
-                <span className="text-lg">🎭</span>
-                2D View
+                <span className="text-xl">⚔️</span>
+                Hologram View
               </>
             ) : (
               <>
-                <span className="text-lg">🎪</span>
-                3D View
+                <span className="text-xl">🌌</span>
+                Galaxy View
               </>
             )}
           </span>
 
-          {/* Pulse effect */}
-          <div className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-active:opacity-100 transition-opacity duration-150" />
+          {/* Force effect on click */}
+          <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 to-transparent opacity-0 group-active:opacity-100 transition-opacity duration-200 rounded-sm" />
+
+          {/* Scanning line effect */}
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
         </button>
       </div>
 
