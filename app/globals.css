@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Flip card animation styles */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
