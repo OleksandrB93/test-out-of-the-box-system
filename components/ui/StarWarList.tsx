@@ -4,7 +4,9 @@ import { Movie } from "@/hooks/use-movie-search";
 import { useStarFieldAnimation } from "@/hooks/use-star-field-animation";
 import { use3DCardsAnimation } from "@/hooks/use-3d-cards-animation";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import StarWarItem from "./StarWarItem";
 
 const StarWarList = ({
@@ -16,6 +18,9 @@ const StarWarList = ({
 }) => {
   const router = useRouter();
   const [use3D, setUse3D] = useState(true); // Toggle between 2D and 3D views
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const scene3DRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { mountRef: starFieldRef } = useStarFieldAnimation({
     isLoading: false, // Always show stars
@@ -31,8 +36,57 @@ const StarWarList = ({
     },
   });
 
+  // Register ScrollTrigger plugin and setup animations
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Ensure we have all necessary elements
+    if (!titleRef.current || !scene3DRef.current || !containerRef.current)
+      return;
+
+    // Set initial states
+    gsap.set(titleRef.current, { opacity: 1, scale: 1, z: 10 });
+    gsap.set(scene3DRef.current, { opacity: 0, scale: 0.8, z: -10 });
+
+    // Create scroll-triggered animations
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom center",
+        scrub: 1,
+        pin: false,
+        anticipatePin: 1,
+      },
+    });
+
+    // Animate title out and 3D scene in
+    tl.to(titleRef.current, {
+      opacity: 0,
+      scale: 0.5,
+      z: -50,
+      duration: 1,
+      ease: "power2.out",
+    }).to(
+      scene3DRef.current,
+      {
+        opacity: 1,
+        scale: 1,
+        z: 0,
+        duration: 1,
+        ease: "power2.out",
+      },
+      0.3
+    ); // Start 3D scene animation slightly after title starts fading
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [use3D, movies.length]); // Re-run when 3D mode changes or movies load
+
   return (
-    <div className="relative w-full min-h-screen">
+    <div ref={containerRef} className="relative w-full min-h-[200vh]">
       {/* Star field background - always visible */}
       <div
         ref={starFieldRef}
@@ -47,11 +101,23 @@ const StarWarList = ({
         }}
       />
 
-      {/* 3D Cards Scene */}
+      {/* Star Wars Title - starts visible, fades on scroll */}
+      <h1
+        ref={titleRef}
+        style={{
+          fontFamily: "Star Wars",
+          textShadow: "0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24",
+        }}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[300px] leading-none font-bold text-center text-black z-20 pointer-events-none"
+      >
+        Star Wars
+      </h1>
+
+      {/* 3D Cards Scene - starts hidden, appears on scroll */}
       {use3D && (
         <div
-          ref={cards3DRef}
-          className="fixed inset-0 z-5 w-full h-full"
+          ref={scene3DRef}
+          className="fixed inset-0 z-10 w-full h-full"
           style={{
             width: "100vw",
             height: "100vh",
@@ -59,68 +125,8 @@ const StarWarList = ({
             left: 0,
             position: "fixed",
           }}
-        />
-      )}
-
-      {/* Star Wars Toggle Button */}
-      <div className="fixed top-4 right-4 z-20">
-        <button
-          onClick={() => setUse3D(!use3D)}
-          className="group relative bg-black hover:bg-gray-900 text-yellow-400 px-8 py-4 rounded-sm shadow-2xl hover:shadow-yellow-500/30 transition-all duration-500 font-bold tracking-wider uppercase border-2 border-yellow-400 hover:border-yellow-300 transform hover:scale-110"
-          style={{
-            fontFamily: "monospace",
-            textShadow: "0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24",
-            boxShadow:
-              "0 0 20px rgba(251, 191, 36, 0.3), inset 0 0 20px rgba(251, 191, 36, 0.1)",
-          }}
         >
-          {/* Lightsaber glow effect */}
-          <div
-            className="absolute inset-0 border-2 border-yellow-400 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"
-            style={{
-              boxShadow:
-                "0 0 30px #fbbf24, inset 0 0 30px rgba(251, 191, 36, 0.2)",
-            }}
-          />
-
-          {/* Corner decorations */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-yellow-400 rounded-tl-sm" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-yellow-400 rounded-tr-sm" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-yellow-400 rounded-bl-sm" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-yellow-400 rounded-br-sm" />
-
-          {/* Button text with Star Wars icons */}
-          <span className="relative flex items-center gap-3 z-10">
-            {use3D ? (
-              <>
-                <span className="text-xl">⚔️</span>
-                Hologram View
-              </>
-            ) : (
-              <>
-                <span className="text-xl">🌌</span>
-                Galaxy View
-              </>
-            )}
-          </span>
-
-          {/* Force effect on click */}
-          <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 to-transparent opacity-0 group-active:opacity-100 transition-opacity duration-200 rounded-sm" />
-
-          {/* Scanning line effect */}
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
-        </button>
-      </div>
-
-      {/* 2D Content - only visible when 3D is disabled */}
-      {!use3D && (
-        <div className="relative z-10 w-full flex justify-center items-center p-8 md:p-16 lg:p-24 xl:p-32 min-h-screen">
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-20">
-            {movies.map((movie) => (
-              <StarWarItem key={movie.id} movie={movie} />
-            ))}
-          </ul>
+          <div ref={cards3DRef} className="w-full h-full" />
         </div>
       )}
     </div>

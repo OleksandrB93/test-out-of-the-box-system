@@ -89,7 +89,7 @@ const StarWarItem = ({ movie }: { movie: Movie }) => {
       >
         <div className="bg-gradient-to-t from-black/90 via-black/70 to-transparent rounded-t-2xl p-5 -mx-4 -mb-6 border-t border-white/10">
           {/* Title with modern typography */}
-          <h2 className="text-xl font-bold bg-gradient-to-r from-white via-cyan-100 to-purple-100 bg-clip-text text-transparent mb-3 line-clamp-2 group-hover:from-cyan-400 group-hover:via-purple-400 group-hover:to-pink-400 transition-all duration-500 tracking-wide">
+          <h2 style={{ fontFamily: "Star Wars" }} className="text-xl font-bold bg-gradient-to-r from-white via-cyan-100 to-purple-100 bg-clip-text text-transparent mb-3 line-clamp-2 group-hover:from-cyan-400 group-hover:via-purple-400 group-hover:to-pink-400 transition-all duration-500 tracking-wide">
             {movie.title}
           </h2>
 
