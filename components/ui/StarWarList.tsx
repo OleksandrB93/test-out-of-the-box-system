@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import StarWarItem from "./StarWarItem";
+import { Mouse } from "lucide-react";
+// import StarWarItem from "./StarWarItem";
 
 const StarWarList = ({
   movies,
@@ -102,16 +103,19 @@ const StarWarList = ({
       />
 
       {/* Star Wars Title - starts visible, fades on scroll */}
-      <h1
-        ref={titleRef}
-        style={{
-          fontFamily: "Star Wars",
-          textShadow: "0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24",
-        }}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[300px] leading-none font-bold text-center text-black z-20 pointer-events-none"
-      >
-        Star Wars
-      </h1>
+      <div className="relative z-10">
+        <h1
+          ref={titleRef}
+          style={{
+            fontFamily: "Star Wars",
+            textShadow: "0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24",
+          }}
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[300px] leading-none font-bold text-center text-black z-20 pointer-events-none"
+        >
+          Star Wars
+        </h1>
+        <Mouse className="fixed top-4 right-4 z-30 animate-bounce" />
+      </div>
 
       {/* 3D Cards Scene - starts hidden, appears on scroll */}
       {use3D && (
