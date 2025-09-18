@@ -1,4 +1,4 @@
-import { CrewMemberProps } from "@/components/MovieItem/MovieCrew";
+import { CrewMemberProps } from "@/hooks/use-crew-animation";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
