@@ -2,7 +2,8 @@
 
 An interactive web application for exploring Star Wars movies with immersive 3D animations and modern design.
 
-**🚀 Live Demo:** [https://test-out-of-the-box-system.vercel.app/](https://test-out-of-the-box-system.vercel.app/)
+🚀 **Live Demo:** [https://test-out-of-the-box-system.vercel.app/](https://test-out-of-the-box-system.vercel.app/)  
+🎥 **Video:** [https://www.loom.com/share/fe7bf648d4024067b219003f8696c6c9](https://www.loom.com/share/fe7bf648d4024067b219003f8696c6c9)
 
 ## 🎯 Project Overview
 
