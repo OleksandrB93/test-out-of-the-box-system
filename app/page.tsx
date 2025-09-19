@@ -1,6 +1,6 @@
 "use client";
 
-import StarWarList from "@/components/ui/StarWarList";
+import StarWarList from "@/components/StarWarList";
 import { useMovieSearch } from "@/hooks/use-movie-search";
 import { useEffect } from "react";
 

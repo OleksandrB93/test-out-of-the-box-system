@@ -13,6 +13,7 @@ import MovieCasts from "./MovieCasts";
 import MovieCrew from "./MovieCrew";
 import { useMovieAnimations } from "../../hooks/use-movie-animations";
 import { ItemProps } from "./MoviePoster";
+import Header from "./Header";
 
 interface MovieItemProps {
   item: ItemProps["item"];
@@ -42,27 +43,12 @@ const MovieItem = ({
   useMovieAnimations(container);
 
   return (
-    <div  ref={container} className="relative custom-mouse-cursor" style={{ height: "200vh" }}>
-      <Button
-        onClick={() => router.back()}
-        className="fixed top-4 left-4 z-50 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 backdrop-blur-sm transition-all duration-200"
-      >
-        <ArrowLeft className="h-5 w-5 text-white" />
-      </Button>
-      <Button
-        onClick={toggleSound}
-        className="fixed top-4 right-4 z-50 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 backdrop-blur-sm transition-all duration-200"
-        variant="ghost"
-        size="icon"
-      >
-        <div className="relative flex items-center justify-center">
-          {isMuted ? (
-            <VolumeX className="h-5 w-5 text-white" />
-          ) : (
-            <Volume2 className="h-5 w-5 text-white" />
-          )}
-        </div>
-      </Button>
+    <div
+      ref={container}
+      className="relative custom-mouse-cursor"
+      style={{ height: "200vh" }}
+    >
+      <Header toggleSound={toggleSound} isMuted={isMuted} />
 
       <div className="fixed inset-0 z-0">
         <MovieTrailer trailer={trailer} iframeRef={iframeRef} />
